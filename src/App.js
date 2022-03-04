@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import './App.css'
+import Form from './Form.js';
 
-function App() {
+const Todo = (props) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ textDecoration: props.todo.complete ? 'line-through' : '' }} className='todo'>
+      {props.todo.name}
+      <div>
+        <button onClick={() => props.completeTodo(props.index)}>Complete</button>
+      </div>
     </div>
-  );
+  )
+}
+
+class App extends React.Component {
+  state = {
+    todos: [
+      { name: 'Imparare React', complete: false },
+      { name: 'Imparare Java', complete: false },
+      { name: 'Imparare Phyton', complete: false }
+    ],
+  }
+  addTodo = (todo) => {
+    const newTodos = [...this.state.todos, { name: todo }]
+    this.setState({
+      todos: newTodos
+    })
+  }
+  completeTodo = (index) => {
+    const newTodos = [...this.state.todos];
+    newTodos[index].complete = true;
+
+    this.setState({
+      todos: newTodos
+    })
+
+  }
+  render() {
+    return (
+      <div className="app">
+        <div className="todo-list">
+          {this.state.todos.map((item, index) => (
+            <Todo key={index} todo={item} index={index} completeTodo={this.completeTodo} />
+          ))}
+          <Form submit={this.addTodo} />
+        </div>
+      </div>
+    )
+  }
 }
 
 export default App;
